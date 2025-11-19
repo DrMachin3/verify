@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BC.GAME Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Inter, -apple-system, Framedcn, Helvetica Neue, Condensed, DisplayRegular, Helvetica, Arial, PingFang SC, Hiragino Sans GB, WenQuanYi Micro Hei, Microsoft Yahei, sans-serif;
+        }
+
+        body {
+            background-color: #0f1012;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .verifyOverlay {
+            color: #fff;
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            background: #17181b;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .verifyHeader {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .verifyHeader .logo {
+            height: 32px;
+        }
+
+        .verifyHeader .content {
+            font-weight: 700;
+            border-left: 1px solid rgba(49, 56, 61, 0.5);
+            display: flex;
+            justify-content: left;
+            flex-direction: column;
+            margin-left: 14px;
+            padding-left: 20px;
+            text-align: left;
+        }
+
+        .verifyHeader .header {
+            font-size: 16px;
+        }
+
+        .verifyHeader .footer {
+            font-size: 12px;
+            color: #98a7b5;
+        }
+
+        .verifyIcon {
+            margin: 15px 0;
+        }
+
+        .verifyBody {
+            font-size: 23px;
+            display: flex;
+            justify-content: center;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .verifyBody .left {
+            color: #ffbf39;
+        }
+
+        .verifyBody .right {
+            padding-left: 5px;
+            color: #fff;
+        }
+
+        .verifyText {
+            font-size: 14px;
+            font-weight: 400;
+            color: #98a7b5;
+            margin-top: 18px;
+            line-height: 1.5;
+        }
+
+        .verifyInputWrap {
+            display: flex;
+            border-radius: 5px;
+            background: #24262b;
+            color: white;
+            width: 100%;
+            height: 56px;
+            margin-top: 40px;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            align-items: center;
+        }
+
+        .verifyInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #919295;
+            font-size: 14px;
+            height: 100%;
+        }
+
+        .verifyInput:focus {
+            outline: none;
+            color: #fff;
+        }
+
+        .verifyInput::placeholder {
+            color: #fff;
+            font-size: 14px;
+            opacity: 0.5;
+        }
+
+        .verifyInputButton {
+            opacity: 0.5;
+            cursor: pointer;
+            margin: 4px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #5ddb1c, #43b309);
+            width: 88px;
+            height: 48px;
+            transition: opacity 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .verifyInputButton:hover {
+            opacity: 1;
+        }
+
+        .verifyExtra {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .bio-intro {
+            font-size: 14px;
+            color: #98a7b5;
+            margin-bottom: 15px;
+        }
+
+        .bio-image {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .close {
+            opacity: 0.5;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            transition: opacity 0.3s ease;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .close:hover {
+            opacity: 1;
+        }
+
+        /* Result Popup Styles */
+        .verifyOutcome {
+            z-index: 999 !important;
+            width: 320px;
+            height: 275px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            border-radius: 10px;
+        }
+
+        .verifyOutcome svg {
+            width: 64px;
+            height: 72px;
+            margin-top: 24px;
+            color: #000;
+        }
+
+        .verifyOutcome .text-wrap {
+            margin: 16px 10px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .verifyOutcome .green {
+            color: #56b430;
+        }
+
+        .verifyOutcome .red {
+            color: #ee4016;
+        }
+
+        .verifyOutcome .okButton {
+            border-radius: 4px;
+            background-image: conic-gradient(from 1turn, #5ddb1c, #43b309 0turn, #5ddb1c);
+            width: 118px;
+            height: 42px;
+            margin-top: 42px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 642px) {
+            .verifyContent {
+                width: 100%;
+                height: 100%;
+                overflow: scroll;
+            }
+            .verifyBody {
+                flex-direction: column;
+            }
+            .verifyText {
+                margin-top: 15%;
+            }
+            .verifyOutcome {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="verifyOverlay">
+        <button class="close" onclick="closeOverlay()">×</button>
+        <div class="verifyHeader">
+            <img src="https://bcgame.com/_next/static/media/logo.96a6d382.png" alt="BC.GAME Logo" class="logo">
+            <div class="content">
+                <div class="header">Official</div>
+                <div class="footer">Media Authenticator</div>
+            </div>
+        </div>
+        <div class="verifyIcon">
+            <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="72" height="72" fill="url(#pattern0)"></rect>
+                <defs>
+                    <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+                        <use xlink:href="#image0" transform="scale(0.00406504)"></use>
+                    </pattern>
+                    <image id="image0" width="246" height="246" xlink:href="data:image/png;base64,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"></image>
+                </defs>
+            </svg>
+        </div>
+        <div class="verifyBody">
+            <span class="right">Make sure you're entering the right username</span>
+        </div>
+        <div class="verifyText">
+            Scammers often remove their “username” field and have a bio that imitates official BC.GAME user names. Go to the user's profile page and be sure to verify the channel details under "username", not "bio".
+        </div>
+        <div class="verifyInputWrap">
+            <input placeholder="Please enter Telegram/Discord ID" class="verifyInput" id="usernameInput" value="">
+            <div class="verifyInputButton" onclick="verifyUsername()">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.2305 13.1556L11.2912 12.2163C10.1762 13.1288 8.75178 13.6769 7.19928 13.6788C3.62553 13.6788 0.728027 10.7813 0.728027 7.2075C0.728027 3.63375 3.62553 0.736252 7.19928 0.736252C10.773 0.736252 13.6705 3.63375 13.6705 7.2075C13.6687 8.74875 13.128 10.1638 12.228 11.275L13.1693 12.2163L13.148 12.2369L13.1562 12.23C13.3593 12.0688 13.6555 12.0825 13.8437 12.27L17.1205 15.5469C17.3224 15.7488 17.3224 16.0769 17.1205 16.2794L16.288 17.1119C16.0862 17.3138 15.758 17.3138 15.5555 17.1119L12.2787 13.835C12.0912 13.6475 12.0774 13.3513 12.2387 13.1475L12.2312 13.155L12.2305 13.1556ZM7.19928 2.28563C4.48115 2.28563 2.2774 4.48938 2.2774 7.2075C2.2774 9.92563 4.48115 12.1294 7.19928 12.1294C9.9174 12.1294 12.1212 9.92563 12.1212 7.2075C12.1187 4.49 9.91678 2.28813 7.19928 2.28563Z" fill="white"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="verifyExtra">
+            <div class="bio-intro">Please type in the agents account ID, and click on check button.</div>
+            <img class="bio-image" src="https://bcgame.com/_next/static/media/bio.0f49fdc3.png" alt="BC.GAME Bio Example">
+        </div>
+    </div>
+
+    <!-- Result Popup (Initially Hidden) -->
+    <div class="verifyOutcome" id="resultPopup" style="display: none;">
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <rect width="72" height="72" fill="url(#pattern0_48_711)"></rect>
+            <defs>
+                <pattern id="pattern0_48_711" patternContentUnits="objectBoundingBox" width="1" height="1">
+                    <use xlink:href="#image0_48_711" transform="scale(0.00406504)"></use>
+                </pattern>
+                <image id="image0_48_711" width="246" height="246" xlink:href="data:image/png;base64,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"></image>
+            </defs>
+        </svg>
+        <div class="text-wrap" id="resultText">
+            <!-- Result text will be inserted here -->
+        </div>
+        <button class="okButton" onclick="closeResult()">OK</button>
+    </div>
+
+    <script>
+        // List of official representatives
+        const officialReps = [
+            "bcgame passy",
+            "bcgame amubus",
+            "bcgame yu",
+            "bcvip_passy"
+        ];
+
+        function verifyUsername() {
+            const username = document.getElementById('usernameInput').value.trim().toLowerCase();
+            const resultPopup = document.getElementById('resultPopup');
+            const resultText = document.getElementById('resultText');
+            
+            // Check if username is in the official list
+            const isOfficial = officialReps.some(rep => username.includes(rep.toLowerCase()));
+            
+            if (isOfficial) {
+                resultText.innerHTML = `<div><span class="green">${username}&nbsp;</span><span>is the official representative of BC.GAME, you can trust this account. Thank you for verification.</span></div>`;
+            } else {
+                resultText.innerHTML = `<div><span class="red">${username}&nbsp;</span><span>is NOT the official representative of BC.GAME. Please stop accessing it to avoid fraud.</span></div>`;
+            }
+            
+            // Show the result popup
+            resultPopup.style.display = 'flex';
+        }
+
+        function closeResult() {
+            document.getElementById('resultPopup').style.display = 'none';
+        }
+
+        function closeOverlay() {
+            // In a real implementation, this would close the overlay
+            alert("Close button clicked - in a real app this would close the overlay");
+        }
+    </script>
+</body>
+</html>
