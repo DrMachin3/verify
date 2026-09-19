@@ -1,3 +1,25 @@
+<script id="nested-search-button-fix">
+(function () {
+	const timer = setInterval(function () {
+		const input = document.querySelector('.input.mt-4.h-12.w-full.bg-layer3.p-2 input');
+		const parent = input && input.closest('.felx.relative.w-full');
+		const outerButton = parent && parent.querySelector(':scope > button');
+		const innerButton = outerButton && outerButton.querySelector('button');
+		if (!input || !outerButton || !innerButton || input.dataset.searchButtonFixed) return;
+
+		input.dataset.searchButtonFixed = 'true';
+		function updateSearchButtons() {
+			const disabled = input.value.trim().length === 0;
+			outerButton.disabled = disabled;
+			innerButton.disabled = disabled;
+		}
+
+		input.addEventListener('input', updateSearchButtons);
+		updateSearchButtons();
+		clearInterval(timer);
+	}, 50);
+}());
+</script>
 <style id="responsive-layout-fix">
 	html, body { max-width: 100%; overflow-x: hidden; }
 	.dialog-root, .dialog-item, .dialog-content, .scroll-container, .felx.relative.w-full { width: 100%; max-width: 100%; min-width: 0; }
